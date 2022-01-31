@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <malloc.h>
-#include <sys\stat.h>
+#include <sys/stat.h>
 
 int main(int argc, char** argv)
 {
