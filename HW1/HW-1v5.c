@@ -14,7 +14,6 @@ int main(int argc, char** argv)
     int nameLength=0;
     int size;
     struct stat buff;
-    //char name[255];
     //работа с кириллицей
     setlocale(LC_ALL,"");
     //указатель на файл
