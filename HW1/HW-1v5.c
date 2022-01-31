@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <malloc.h>
+#include <sys\stat.h>
 
-int main()
+int main(int argc, char** argv)
 {
     int j=0;
     int i=0;
@@ -12,31 +13,29 @@ int main()
     int c=0;
     int nameLength=0;
     int size;
-    char name[255];
-    system("cls"); //очистка экрана
+    struct stat buff;
+    //char name[255];
     //работа с кириллицей
-    setlocale(LC_ALL,"rus");
+    setlocale(LC_ALL,"");
     //указатель на файл
     FILE *fin;
    //запрос имени файла
-   printf ("Enter filename - ");
-   gets (name);
-   printf ("File name - %s\n", name);
+   printf("Size of command line arguments %d \n", argc);
+   printf ("File name - %s\n", argv[1]);
      //открытие файла на чтение
-    fin=fopen(name,"rb");
+    fin=fopen(argv[1],"rb");
     printf ("File openning: ");
     if (fin == NULL) {printf ("Error\n"); return -1;}
     else printf ("Done \n");
     //поиск размера файла, для определения размера массива    
-    fseek(fin, 0, SEEK_END);// устанавливает позицию в потоке данных на конец файл
-    size = ftell(fin); //возвращает текущее значение указателя положения в файле количество байт, на которое указатель отстоит от начала файла.
+    fstat (fileno (fin), &buff);
+    size=buff.st_size;
     printf ("File size in bytes - %d\n", size);
     // Выделение памяти
     a = (char*)malloc((size) * sizeof(int));    //указывается сначала тип данных массива, затем указывается тип переменной количества эдементов
      //считывание файла в массив 
-     fseek(fin,0L, SEEK_SET); 
-     fread(a,4, (size),fin); //fread(имя массива, Размер в байтах каждого считываемого элемента, Количество элементов, файл)
-       for (i=0;i<(size);i++)
+    fread(a,1, size,fin); //fread(имя массива, Размер в байтах каждого считываемого элемента, Количество элементов, файл)
+       for (i=0;i<size;i++)
        {
         if (a[i]==0x50 && a[i+1]==0x4B && a[i+2]==0x03 && a[i+3]==0x04) // && a[i+1]==0x4B && a[i+2]==0x03 && a[i+3]==0x04
         {
