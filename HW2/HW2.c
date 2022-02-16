@@ -9,35 +9,13 @@
 struct codepage {              //структура кодировок. первые 2 байта -UTF-8; 3- win1251,4 -koi8 , 5- iso8859
 	unsigned char utf1;
 	unsigned char utf2;
-    unsigned char win1251;
+   unsigned char win1251;
 	unsigned char koi8;
-    unsigned char iso8859;
+   unsigned char iso8859;
 };
 
-//функция определения размера файла = массива
-
-int fsize (char *filename)
-{
-	FILE *fin;
-	int filesize;
-	struct stat buff;
-    //открытие файла на чтение
-    fin=fopen(filename,"rb");
-    printf ("File openning: ");
-    if (fin == NULL) {printf ("Error\n"); return -1;}
-    else printf ("Done \n");
-    //поиск размера файла, для определения размера массива    
-    fstat (fileno (fin), &buff);
-    filesize=buff.st_size;
-    printf ("File size in bytes - %d\n", filesize);
-	fclose (fin);
-return (filesize);	
-}
-       
-int main(int argc, char** argv)
-{
-    //кодировка
-struct codepage letters[] = {
+//кодировка
+static struct codepage letters[] = {
 {0xD0,0x90,0xC0,0xE1,0xB0},{0xD0,0x91,0xC1,0xE2,0xB1},{0xD0,0x92,0xC2,0xF7,0xB2},
 {0xD0,0x93,0xC3,0xE7,0xB3},{0xD0,0x94,0xC4,0xE4,0xB4},{0xD0,0x95,0xC5,0xE5,0xB5},
 {0xD0,0x96,0xC6,0xF6,0xB6},{0xD0,0x97,0xC7,0xFA,0xB7},{0xD0,0x98,0xC8,0xE9,0xB8},
@@ -64,11 +42,36 @@ struct codepage letters[] = {
 {0xD1,0x8C,0xFC,0xD8,0xEC},{0xD1,0x8D,0xFD,0xDC,0xED},{0xD1,0x8E,0xFE,0xC0,0xEE},
 {0xD1,0x8F,0xFF,0xD1,0xEF},{0xD1,0x81,0xA8,0xB3,0xA1},{0xD1,0x91,0xB8,0xA3,0xF1}
 };
-        
-    //указатели на файлы + открытие файлов
-    FILE *fin=fopen(argv[1],"rb"); //входной
-	FILE *fout=fopen(argv[3],"wb"); //выходной
+//функция определения размера файла = массива
 
+int fsize (char *filename)
+{
+	FILE *fin;
+	int filesize;
+	struct stat buff;
+    //открытие файла на чтение
+    fin=fopen(filename,"rb");
+    printf ("File openning: ");
+    if (fin == NULL) {printf ("Error\n"); return -1;}
+    else printf ("Done \n");
+    //поиск размера файла, для определения размера массива    
+    fstat (fileno (fin), &buff);
+    filesize=buff.st_size;
+    printf ("File size in bytes - %d\n", filesize);
+	fclose (fin);
+return (filesize);	
+}
+       
+int main(int argc, char** argv)
+{           
+    //проверка количества аргументов командной строки
+    if (argc<4) {printf("Empty command line arguments! Please enter: filename, code type(w,k,i), output filename \n");}
+    else
+    {
+    //указатели на файлы + открытие файлов
+   FILE *fin=fopen(argv[1],"rb"); //входной
+	FILE *fout=fopen(argv[3],"wb"); //выходной
+   
    //запрос имени файла
    printf("Size of command line arguments %d \n", argc);
    printf ("Inputfile name - %s\n", argv[1]);
@@ -146,5 +149,6 @@ fclose (fin);                                      // закрыть файл
 fclose (fout);
 free(a); //освобождаем память выделенную под массив
 free(b);
+}
 return 0;
 }
